@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 const sequelize = require('../Config/db');
 const constant = {
     ADMIN: "0",
-    USER: "1"
+    STUDENT: "1"
 }
 
 const User = sequelize.define('User', {
@@ -29,15 +29,15 @@ const User = sequelize.define('User', {
             allowNull: false
         },
         role: {
-            type: Sequelize.ENUM(constant.ADMIN, constant.USER),
+            type: Sequelize.ENUM(constant.ADMIN, constant.STUDENT),
             field: 'role',
-            defaultValue: constant.USER,
+            defaultValue: constant.STUDENT,
             allowNull: false
         }
 }, {
-    freezeTableName: true,
-    timestamps: true,
-    underscored: true,
+    // freezeTableName: true,
+    // timestamps: true,
+    // underscored: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
 });
