@@ -15,9 +15,8 @@ const userRegister = expressAsyncHandler(async (req, res, next) => {
     const userAvailable = await userSchema.findOne({ where: { email } });
 
     if (userAvailable) {
-        const error = new Error("User already exists");
-        error.status = 400;
-        return next(error);
+        return res.status(400).json({ success: true, message: "User already exists" })
+
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -26,11 +25,9 @@ const userRegister = expressAsyncHandler(async (req, res, next) => {
     const user = await userSchema.create({ username, email, password: hashedPassword, role });
 
     if (user) {
-        res.status(201).json({ user })
+        return res.status(201).json({ success: true, message: "User registered successfully.", user })
     } else {
-        const error = new Error("User not vaild.");
-        error.status = 400;
-        return next(error);
+        return res.status(400).json({ success: true, message: "User not created" })
     }
 });
 
@@ -38,21 +35,25 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        const error = new Error("All fields are required");
-        error.status = 400;
-        return next(error);
+        return res.status(400).json({ success: true, message: "All fields are required" })
     }
 
     const user = await userSchema.findOne({ where: { email } });
 
-    console.log(user);
     if (!user) {
-        const error = new Error("User not found");
-        error.status = 404;
-        return next(error);
+        return res.status(400).json({ success: true, message: "User not found." })
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+
+    let tokenType;
+
+    if (user.role === "0") {
+        tokenType = process.env.ACCESS_TOKEN_SECRET_ADMIN;
+    }
+    else {
+        tokenType = process.env.ACCESS_TOKEN_SECRET_USER;
+    }
 
     if (isMatch) {
         const accesssToken = jwt.sign({
@@ -62,26 +63,26 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
                 id: user.id
             }
         },
-            process.env.ACCESS_TOKEN_SECRET,
+            tokenType,
             {
-                expiresIn: "10m"
+                expiresIn: process.env.ACCESS_TOKEN_EXPIRES_TIME
             }
         )
-        // console.log(accesssToken);
-        res.status(200).json({accesssToken:accesssToken});
+        return res.status(200).json({
+            success: true,
+            message: "User registered successfully.",
+            data: {
+                role: user.role,
+                accesssToken: accesssToken
+            }
+        });
     } else {
-        const error = new Error("Invalid password.");
-        error.status = 400;
-        return next(error);
+        return res.status(400).json({ success: true, message: "Invalid credentials." })
     }
 });
 
-const userCurrent = expressAsyncHandler(async (req, res, next) => {
-    res.status(200).send("now you can access this route");
-});
 
 module.exports = {
     userRegister,
-    userLogin,
-    userCurrent
+    userLogin
 };

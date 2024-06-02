@@ -3,13 +3,14 @@ const router = express.Router();
 
 const {
     userRegister,
-    userLogin,
-    userCurrent
+    userLogin
 } = require('../Controllers/user.controller');
-const validateToken = require('../Middleware/validateTokenHandler');
+
+router.get('/routeCheck', (req, res) => {
+    res.send('this is user route');
+});
 
 router.route('/register').post(userRegister);
 router.route('/login').post(userLogin);
-router.route("/current").get(validateToken,userCurrent);
 
 module.exports = router;
