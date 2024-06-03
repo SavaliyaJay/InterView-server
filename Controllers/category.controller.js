@@ -1,5 +1,6 @@
-const expressAsyncHandler = require('express-async-handler');   
+const expressAsyncHandler = require('express-async-handler');
 const categorySchema = require('../Models/category.model');
+const subCategorySchema = require('../Models/subCategory.model');
 
 const getCategories = expressAsyncHandler(async (req, res, next) => {
     const categories = await categorySchema.findAll();
@@ -78,10 +79,13 @@ const deleteCategory = expressAsyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: true, message: "Category not found" })
     }
 
-    const category = await categorySchema.destroy({ where: { id: req.params.id } });
+    const [category, subCategory] = await Promise.all([
+        categorySchema.destroy({ where: { id: req.params.id } }),
+        subCategorySchema.destroy({ where: { c_id: req.params.id } })
+    ]);
     
-    if (category) {
-        return res.status(201).json({ success: true, message: "Category deleted successfully." })
+    if (category || subCategory) {
+        return res.status(201).json({ success: true, message: "Category deleted successfully." })    
     } else {
         return res.status(400).json({ success: true, message: "Category not deleted" })
     }
