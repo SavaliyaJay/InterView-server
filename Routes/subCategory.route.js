@@ -11,17 +11,18 @@ const {
 } = require('../Controllers/subCategory.controller');
 const { validateTokenForAdmin} = require('../Middleware/validateTokenHandler');
 
-
-router.use(validateTokenForAdmin);
-
 router.get('/routeCheck', (req, res) => {
     res.send('this is subCategory route');
 });
+
+// Public
 router.route('/').get(getSubCategories);
 router.route('/:id').get(getSubCategory);
-router.route('/category/:id').get(getSubCategoryUsingCategoryId)
-router.route('/').post(addSubCategory);
-router.route('/:id').put(updateSubCategory);
-router.route('/:id').delete(deleteSubCategory);
+router.route('/category/:id').get(getSubCategoryUsingCategoryId);
+
+// Only for Admin
+router.route('/').post(validateTokenForAdmin, addSubCategory);
+router.route('/:id').put(validateTokenForAdmin, updateSubCategory);
+router.route('/:id').delete(validateTokenForAdmin, deleteSubCategory);
 
 module.exports = router;

@@ -84,7 +84,7 @@ const deleteCategory = expressAsyncHandler(async (req, res, next) => {
         subCategorySchema.destroy({ where: { c_id: req.params.id } })
     ]);
     
-    if (category || subCategory) {
+    if (category && subCategory) {
         return res.status(201).json({ success: true, message: "Category deleted successfully." })    
     } else {
         return res.status(400).json({ success: true, message: "Category not deleted" })

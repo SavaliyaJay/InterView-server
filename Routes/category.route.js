@@ -7,18 +7,19 @@ const {
     updateCategory,
     deleteCategory
 } = require('../Controllers/category.controller');
-const { validateTokenForAdmin} = require('../Middleware/validateTokenHandler');
-
-
-router.use(validateTokenForAdmin);
+const { validateTokenForAdmin } = require('../Middleware/validateTokenHandler');
 
 router.get('/routeCheck', (req, res) => {
     res.send('this is category route');
 });
+
+// Public
 router.route('/').get(getCategories);
 router.route('/:id').get(getCategory);
-router.route('/').post(addCategory);
-router.route('/:id').put(updateCategory);
-router.route('/:id').delete(deleteCategory);
+
+// Only for Admin
+router.route('/').post(validateTokenForAdmin, addCategory);
+router.route('/:id').put(validateTokenForAdmin, updateCategory);
+router.route('/:id').delete(validateTokenForAdmin, deleteCategory);
 
 module.exports = router;
