@@ -1,7 +1,6 @@
 const expressAsyncHandler = require("express-async-handler");
 const answerSchema = require("../Models/answer.model");
 const questionSchema = require("../Models/question.model");
-const subCategorySchema = require("../Models/subCategory.model");
 
 const getAnswers = expressAsyncHandler(async (req, res, next) => {
     const answers = await answerSchema.findAll();

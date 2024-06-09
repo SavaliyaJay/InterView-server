@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
-const {sequelize} = require('../Config/db');
+const {Sequelize} = require('sequelize');
+const sequelize = require('../Config/db');
 
 const Answer = sequelize.define('Answer', {
     a_id: {

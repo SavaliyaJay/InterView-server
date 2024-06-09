@@ -32,25 +32,27 @@ const addQuestion = expressAsyncHandler(async (req, res, next) => {
         return next(error);
     }
 
+
     const subCategoryAvailable = await subCategorySchema.findOne({ where: { id: subCategory_id } });
 
     if (!subCategoryAvailable) {
         return res.status(400).json({ success: true, message: "Sub Category not found" })
     }
 
-    const questionAvailable = await questionSchema.findOne({ where: { question, subCategory_id } });
+    const questionAvailable = await questionSchema.findOne({ where: { question, sub_category_id: subCategory_id } });
 
     if (questionAvailable) {
         return res.status(400).json({ success: true, message: "Question already exists" })
     }
 
-    const newQuestion = await questionSchema.create({ question, subCategory_id });
+    const newQuestion = await questionSchema.create({ question, subCategoryId: subCategory_id });
 
     if (newQuestion) {
-        return res.status(201).json({ success: true, message: "Question created successfully.", newQuestion })
-    }else{
-        return res.status(400).json({ success: true, message: "Question not created" })
+        return res.status(201).json({ success: true, message: "Question created successfully.", newQuestion });
+    } else {
+        return res.status(400).json({ success: false, message: "Question not created" });
     }
+
 });
 
 const updateQuestion = expressAsyncHandler(async (req, res, next) => {

@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
-const {sequelize} = require('../Config/db');
+const { Sequelize } = require('sequelize');
+const sequelize = require('../Config/db');
 
 const Question = sequelize.define('Question', {
     q_id: {
@@ -11,14 +11,18 @@ const Question = sequelize.define('Question', {
     },
     question: {
         type: Sequelize.STRING,
-        field: 'question_id',
+        field: 'question',
         allowNull: false
     },
     subCategoryId: {
         type: Sequelize.INTEGER,
         field: 'sub_category_id',
-        allowNull: false
-    }
+        allowNull: false,
+        validate: {
+            notNull: { args: true, msg: "You must enter a name" }
+        },
+    },
+
 }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at'
