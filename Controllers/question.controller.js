@@ -13,6 +13,34 @@ const getQuestions = expressAsyncHandler(async (req, res, next) => {
     return res.status(200).json({ success: true, questions });
 });
 
+const getsubCategoryQuestion = expressAsyncHandler(async (req, res, next) => {
+    let page = parseInt(req.query.page);
+    let limit = parseInt(req.query.limit);
+
+    if (isNaN(page) || page < 1) page = 1;
+    if (isNaN(limit) || limit < 1) limit = 10;
+
+    let skip = (page - 1) * limit;
+    const totalQuestions = await questionSchema.count({
+        where: { subCategoryId: req.params.id }
+    });
+
+    const totalPages = Math.ceil(totalQuestions / limit);
+
+    const questions = await questionSchema.findAll({
+        where: { subCategoryId: req.params.id },
+        limit: limit,
+        offset: skip
+    });
+
+    if (!questions || questions.length === 0) {
+        return res.status(400).json({ success: false, message: "Questions not found" });
+    } else {
+        return res.status(200).json({ success: true, questions, totalPages });
+    }
+});
+
+
 const getQuestion = expressAsyncHandler(async (req, res, next) => {
     const question = await questionSchema.findOne({ where: { id: req.params.id } });
 
@@ -101,6 +129,7 @@ const deleteQuestion = expressAsyncHandler(async (req, res, next) => {
 
 module.exports = {
     getQuestions,
+    getsubCategoryQuestion,
     getQuestion,
     addQuestion,
     updateQuestion,

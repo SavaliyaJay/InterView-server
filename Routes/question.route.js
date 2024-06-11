@@ -6,7 +6,8 @@ const {
     getQuestion,
     addQuestion,
     updateQuestion,
-    deleteQuestion
+    deleteQuestion,
+    getsubCategoryQuestion
 } = require('../Controllers/question.controller');
 
 const { validateTokenForAdmin } = require('../Middleware/validateTokenHandler');
@@ -18,6 +19,7 @@ router.get('/routeCheck', (req, res) => {
 // Public
 router.route('/').get(getQuestions);
 router.route('/:id').get(getQuestion);
+router.route('/subCategory/:id').get(getsubCategoryQuestion);
 
 // Only for Admin
 router.route('/').post(validateTokenForAdmin, addQuestion);
