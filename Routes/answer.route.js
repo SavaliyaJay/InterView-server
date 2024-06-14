@@ -6,7 +6,8 @@ const {
     getAnswer,
     addAnswer,
     updateAnswer,
-    deleteAnswer
+    deleteAnswer,
+    getQuestionAnswer
 } = require('../Controllers/answer.controller');
 
 const { validateTokenForUser } = require('../Middleware/validateTokenHandler');
@@ -20,6 +21,7 @@ router.route('/').get(getAnswers);
 router.route('/:id').get(getAnswer);
 
 // Only for User
+router.route('/question/:id').get(validateTokenForUser, getQuestionAnswer);
 router.route('/').post(validateTokenForUser, addAnswer);
 router.route('/:id').put(validateTokenForUser, updateAnswer);
 router.route('/:id').delete(validateTokenForUser, deleteAnswer);

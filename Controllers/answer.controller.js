@@ -1,6 +1,7 @@
 const expressAsyncHandler = require("express-async-handler");
 const answerSchema = require("../Models/answer.model");
 const questionSchema = require("../Models/question.model");
+const userSchema = require('../Models/user.model');
 
 const getAnswers = expressAsyncHandler(async (req, res, next) => {
     const answers = await answerSchema.findAll();
@@ -22,13 +23,20 @@ const getAnswer = expressAsyncHandler(async (req, res, next) => {
     return res.status(200).json({ success: true, answer });
 });
 
-const addAnswer = expressAsyncHandler(async (req, res, next) => {
-    const { answer, question_id } = req.body;
+const getQuestionAnswer = expressAsyncHandler(async (req, res, next) => {
+    const user_id = req.user.id;
+    const question_id = req.params.id;
 
-    if (!answer || !question_id) {
+    if (!user_id || !question_id) {
         const error = new Error("All fields are required");
         error.status = 400;
         return next(error);
+    }
+
+    const userAvailable = await userSchema.findOne({ where: { id: user_id } });
+
+    if (!userAvailable) {
+        return res.status(400).json({ success: true, message: "User not found" });
     }
 
     const questionAvailable = await questionSchema.findOne({ where: { id: question_id } });
@@ -37,10 +45,42 @@ const addAnswer = expressAsyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: true, message: "Question not found" });
     }
 
-    const newAnswer = await answerSchema.create({ answer, question_id });
+    const answers = await answerSchema.findAll({ where: { questionId: question_id, user_id: user_id } });
+
+    if (!answers) {
+        return res.status(400).json({ success: true, message: "Answers not found" });
+    }
+
+    return res.status(200).json({ success: true, answers });
+
+});
+
+const addAnswer = expressAsyncHandler(async (req, res, next) => {
+    const { answer, question_id } = req.body;
+    const user_id = req.user.id;
+
+    if (!answer || !question_id || !user_id) {
+        const error = new Error("All fields are required");
+        error.status = 400;
+        return next(error);
+    }
+
+    const userAvailable = await userSchema.findOne({ where: { id: user_id } });
+
+    if (!userAvailable) {
+        return res.status(400).json({ success: true, message: "User not found" });
+    }
+
+    const questionAvailable = await questionSchema.findOne({ where: { id: question_id } });
+
+    if (!questionAvailable) {
+        return res.status(400).json({ success: true, message: "Question not found" });
+    }
+
+    const newAnswer = await answerSchema.create({ answer, questionId: question_id, u_id: user_id });
 
     if (newAnswer) {
-        return res.status(201).json({ success: true, message: "Answer created successfully.", newAnswer });
+        return res.status(200).json({ success: true, message: "Answer created successfully.", newAnswer });
     } else {
         return res.status(400).json({ success: true, message: "Answer not created" });
     }
@@ -48,11 +88,18 @@ const addAnswer = expressAsyncHandler(async (req, res, next) => {
 
 const updateAnswer = expressAsyncHandler(async (req, res, next) => {
     const { answer, question_id } = req.body;
+    const user_id = req.user.id;
 
-    if (!answer || !question_id) {
+    if (!answer || !question_id || !user_id) {
         const error = new Error("All fields are required");
         error.status = 400;
         return next(error);
+    }
+
+    const userAvailable = await userSchema.findOne({ where: { id: user_id } });
+
+    if (!userAvailable) {
+        return res.status(400).json({ success: true, message: "User not found" });
     }
 
     const questionAvailable = await questionSchema.findOne({ where: { id: question_id } });
@@ -67,7 +114,7 @@ const updateAnswer = expressAsyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: true, message: "Answer not found" });
     }
 
-    const updatedAnswer = await answerSchema.update({ answer, question_id }, { where: { id: req.params.id } });
+    const updatedAnswer = await answerSchema.update({ answer }, { where: { user_id: user_id, question_id: question_id } });
 
     if (updatedAnswer) {
         return res.status(200).json({ success: true, message: "Answer updated successfully." });
@@ -97,5 +144,6 @@ module.exports = {
     getAnswer,
     addAnswer,
     updateAnswer,
-    deleteAnswer
+    deleteAnswer,
+    getQuestionAnswer
 };

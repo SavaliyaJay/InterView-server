@@ -60,7 +60,7 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
             user: {
                 username: user.username,
                 email: user.email,
-                id: user.id
+                id: user.u_id
             }
         },
             tokenType,
