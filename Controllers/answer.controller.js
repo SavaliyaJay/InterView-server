@@ -3,19 +3,6 @@ const answerSchema = require("../Models/answer.model");
 const questionSchema = require("../Models/question.model");
 const userSchema = require('../Models/user.model');
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-
-const getSuggestedAnswer = async () => {
-    const { prompt } = req.body;
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const text = response.text();
-    return { text };
-}
-
 const getAnswers = expressAsyncHandler(async (req, res, next) => {
     const answers = await answerSchema.findAll();
 

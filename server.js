@@ -10,6 +10,7 @@ const categoryRoute = require('./Routes/category.route');
 const subCategoryRoute = require('./Routes/subCategory.route');
 const questionRoute = require('./Routes/question.route');
 const answerRoute = require('./Routes/answer.route');
+const suggestionRoute = require('./Routes/suggestion.route');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,6 +26,7 @@ app.use('/v1/category/', categoryRoute);
 app.use('/v1/subcategory/', subCategoryRoute);
 app.use('/v1/question/', questionRoute);
 app.use('/v1/answer/', answerRoute);
+app.use('/v1/suggestion/', suggestionRoute);
 
 app.get('/', (req, res) => {
     res.send('Hello World');
