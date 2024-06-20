@@ -45,13 +45,14 @@ const getQuestionAnswer = expressAsyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: true, message: "Question not found" });
     }
 
-    const answers = await answerSchema.findAll({ where: { questionId: question_id, user_id: user_id } });
+    const answerData = await answerSchema.findAll({ where: { questionId: question_id, user_id: user_id } });
 
-    if (!answers) {
-        return res.status(400).json({ success: true, message: "Answers not found" });
+    if (!answerData || answerData.length > 0) {
+        const answers = answerData[0].dataValues;
+        return res.status(200).json({ success: true, answers });
+    }else{
+        return res.status(200).json({ success: true, message: "No answer found" });
     }
-
-    return res.status(200).json({ success: true, answers });
 
 });
 

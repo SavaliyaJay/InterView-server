@@ -27,19 +27,19 @@ const getsubCategoryQuestion = expressAsyncHandler(async (req, res, next) => {
 
     const totalPages = Math.ceil(totalQuestions / limit);
 
-    const questions = await questionSchema.findAll({
+    const questionsData = await questionSchema.findAll({
         where: { subCategoryId: req.params.id },
         limit: limit,
         offset: skip
     });
 
-    if (!questions || questions.length === 0) {
-        return res.status(400).json({ success: false, message: "Questions not found" });
-    } else {
+    if (!questionsData || questionsData.length > 0) {
+        const questions = questionsData[0].dataValues;
         return res.status(200).json({ success: true, questions, totalPages });
+    }else{
+        return res.status(200).json({ success: true, message: "Questions not found" });
     }
 });
-
 
 const getQuestion = expressAsyncHandler(async (req, res, next) => {
     const question = await questionSchema.findOne({ where: { id: req.params.id } });
