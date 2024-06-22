@@ -5,7 +5,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const getSuggestedAnswer = async (req, res) => {
-    const { questionId, answerId } = req.body;
+    const { questionId, answerId } = req.query;
 
     if ( !questionId || !answerId) {
         return res.status(400).json({ success: false, message: "All fields are required" });
