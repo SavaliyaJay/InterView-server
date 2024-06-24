@@ -12,14 +12,13 @@ const questionRoute = require('./Routes/question.route');
 const answerRoute = require('./Routes/answer.route');
 const suggestionRoute = require('./Routes/suggestion.route');
 
+app.use(cors({
+    origin: 'http://localhost:4000', 
+    credentials: true
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(errorHandler);
-const corsOpts = {
-    origin: '*',
-};
-
-app.use(cors(corsOpts));
 
 app.use('/v1/auth/', userRoute);
 app.use('/v1/category/', categoryRoute);
@@ -39,3 +38,5 @@ sequelize.sync().then(() => {
 app.listen(process.env.PORT || 3001, () => {
     console.log(`Server is running on port ${process.env.PORT || 3001}`);
 });
+
+module.exports = app;
