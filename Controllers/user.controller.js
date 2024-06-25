@@ -76,7 +76,8 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
             httpOnly: true, 
             secure: process.env.NODE_ENV === 'production', 
             expires: new Date(Date.now() + 86400000), 
-            sameSite: 'Strict' 
+            sameSite: 'Strict',
+            domain: 'https://inter-view-client.vercel.app/'
           });
 
         return res.status(200).json({
