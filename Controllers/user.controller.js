@@ -68,7 +68,7 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
         );
         res.cookie('role', user.role, {
             // httpOnly: true,
-            secure: true,
+            // secure: true,
             expires: new Date(Date.now() + 86400000) 
           });
 
