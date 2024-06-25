@@ -66,10 +66,17 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
                 expiresIn: process.env.ACCESS_TOKEN_EXPIRES_TIME,
             }
         );
-        res.cookie('role', user.role, {
-            // httpOnly: true,
-            // secure: true,
-            expires: new Date(Date.now() + 86400000) 
+        // res.cookie('role', user.role, {
+        //     // httpOnly: true,
+        //     // secure: true,
+        //     expires: new Date(Date.now() + 86400000) 
+        //   });
+
+        res.cookie('role',  user.role, {
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production', 
+            expires: new Date(Date.now() + 86400000), 
+            sameSite: 'Strict' 
           });
 
         return res.status(200).json({
