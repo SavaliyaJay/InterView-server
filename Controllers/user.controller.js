@@ -77,7 +77,8 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
             secure: process.env.NODE_ENV === 'production', 
             expires: new Date(Date.now() + 86400000), 
             sameSite: 'Strict',
-            domain: 'https://inter-view-client.vercel.app/'
+            domain: '.inter-view-client.vercel.app', // Correct domain setting without protocol
+            path: '/' // Optional: specify the path for which the cookie is valid
           });
 
         return res.status(200).json({
