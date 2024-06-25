@@ -12,8 +12,16 @@ const questionRoute = require('./Routes/question.route');
 const answerRoute = require('./Routes/answer.route');
 const suggestionRoute = require('./Routes/suggestion.route');
 
+const allowedOrigins = ['http://localhost:4000', 'https://interview-server-vda5.onrender.com'];
+
 app.use(cors({
-    origin: 'http://localhost:4000', 
+    origin: function (origin, callback) {
+        if (allowedOrigins.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      }, 
     credentials: true
 }));
 app.use(bodyParser.json());
