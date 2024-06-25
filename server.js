@@ -12,7 +12,7 @@ const questionRoute = require('./Routes/question.route');
 const answerRoute = require('./Routes/answer.route');
 const suggestionRoute = require('./Routes/suggestion.route');
 
-const allowedOrigins = ['http://localhost:4000', 'https://interview-server-vda5.onrender.com'];
+const allowedOrigins = ['http://localhost:4000', 'https://inter-view-client.vercel.app/'];
 
 app.use(cors({
     origin: function (origin, callback) {
