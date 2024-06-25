@@ -12,9 +12,13 @@ const questionRoute = require('./Routes/question.route');
 const answerRoute = require('./Routes/answer.route');
 const suggestionRoute = require('./Routes/suggestion.route');
 
-app.use(cors({
+const corsOptions = {
+    origin: 'https://inter-view-client.vercel.app',
     credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(errorHandler);
