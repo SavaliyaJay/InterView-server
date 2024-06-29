@@ -1,5 +1,7 @@
-const { Sequelize} = require('sequelize');
+
+const { Sequelize } = require('sequelize');
 const sequelize = require('../Config/db');
+const Category = require('./category.model');
 
 const SubCategory = sequelize.define('SubCategory', {
     sc_id: {
@@ -17,11 +19,17 @@ const SubCategory = sequelize.define('SubCategory', {
     c_id: {
         type: Sequelize.INTEGER,
         field: 'category_id',
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: Category,
+            key: 'c_id'
+        }
     }
 }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at'
 });
+
+SubCategory.belongsTo(Category, { foreignKey: 'c_id', as: 'category' });
 
 module.exports = SubCategory;

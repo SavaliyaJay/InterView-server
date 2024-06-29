@@ -34,7 +34,7 @@ const addCategory = expressAsyncHandler(async (req, res, next) => {
     const categoryAvailable = await categorySchema.findOne({ where: { name } });
 
     if (categoryAvailable) {
-        return res.status(400).json({ success: true, message: "Category already exists" });
+        return res.status(200).json({ success: false, message: "Category already exists" });
     }
 
     const category = await categorySchema.create({ name });

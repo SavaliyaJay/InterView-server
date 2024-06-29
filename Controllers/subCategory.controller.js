@@ -4,14 +4,27 @@ const subCategorySchema = require('../Models/subCategory.model');
 const questionSchema = require('../Models/question.model');
 
 const getSubCategories = expressAsyncHandler(async (req, res, next) => {
-    const subCategories = await subCategorySchema.findAll();
+    try {
+        const subCategories = await subCategorySchema.findAll({
+            include: {
+                model: categorySchema,
+                as: 'category',
+                attributes: ['name']
+            }
+        });
 
-    if (!subCategories) {
-        return res.status(400).json({ success: true, message: "Sub Categories not found" })
+        if (!subCategories) {
+            return res.status(400).json({ success: false, message: "Sub Categories not found" });
+        }
+
+        return res.status(200).json({ success: true, subCategories });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: "Server error" });
     }
-
-    return res.status(200).json({ success: true, subCategories });
 });
+
+module.exports = { getSubCategories };
 
 
 const getSubCategory = expressAsyncHandler(async (req, res, next) => {

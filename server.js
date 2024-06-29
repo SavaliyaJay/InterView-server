@@ -11,20 +11,13 @@ const subCategoryRoute = require('./Routes/subCategory.route');
 const questionRoute = require('./Routes/question.route');
 const answerRoute = require('./Routes/answer.route');
 const suggestionRoute = require('./Routes/suggestion.route');
-
-// const corsOptions = {
-//     // origin: 'https://inter-view-client.vercel.app',
-//     origin: 'http://localhost:4000',
-//     credentials: true
-// };
-
-// app.use(cors(corsOptions));
-
+var cookieParser = require('cookie-parser');
 
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' ? 'https://inter-view-client.vercel.app' : 'http://localhost:4000',
-  credentials: true
+    credentials: true
 }));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(errorHandler);
