@@ -18,11 +18,11 @@ const SubCategory = sequelize.define('SubCategory', {
     },
     c_id: {
         type: Sequelize.INTEGER,
-        field: 'category_id',
+        field: 'c_id',
         allowNull: false,
         references: {
             model: Category,
-            key: 'c_id'
+            key: 'id'
         }
     }
 }, {

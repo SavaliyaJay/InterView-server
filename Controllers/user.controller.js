@@ -66,13 +66,15 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
                 expiresIn: process.env.ACCESS_TOKEN_EXPIRES_TIME,
             }
         );
-        res.cookie('role',  user.role,
-            {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'None',
-            }
-        );
+
+        res.cookie('role',  user.role, {
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production', 
+            expires: new Date(Date.now() + 86400000), 
+            sameSite: 'Strict',
+            // domain: '.inter-view-client.vercel.app', // Correct domain setting without protocol
+            // path: '/' // Optional: specify the path for which the cookie is valid
+          });
 
         return res.status(200).json({
             success: true,
@@ -80,6 +82,7 @@ const userLogin = expressAsyncHandler(async (req, res, next) => {
             data: {
                 role: user.role,
                 accessToken: accessToken,
+                username: user.username,
             },
         });
     } else {

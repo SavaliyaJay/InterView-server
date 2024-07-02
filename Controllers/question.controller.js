@@ -4,7 +4,13 @@ const subCategorySchema = require('../Models/subCategory.model');
 const expressAsyncHandler = require('express-async-handler');
 
 const getQuestions = expressAsyncHandler(async (req, res, next) => {
-    const questions = await questionSchema.findAll();
+    const questions = await questionSchema.findAll({
+        include: {
+            model: subCategorySchema,
+            as: 'subCategory',
+            attributes: ['name']
+        }
+    });
 
     if (!questions) {
         return res.status(400).json({ success: true, message: "Questions not found" })
@@ -67,8 +73,7 @@ const addQuestion = expressAsyncHandler(async (req, res, next) => {
         return res.status(400).json({ success: true, message: "Sub Category not found" })
     }
 
-    const questionAvailable = await questionSchema.findOne({ where: { question, sub_category_id: subCategory_id } });
-
+    const questionAvailable = await questionSchema.findOne({ where: { question, subCategoryId: subCategory_id } });
     if (questionAvailable) {
         return res.status(400).json({ success: true, message: "Question already exists" })
     }

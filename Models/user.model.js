@@ -35,9 +35,6 @@ const User = sequelize.define('User', {
             allowNull: false
         }
 }, {
-    // freezeTableName: true,
-    // timestamps: true,
-    // underscored: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
 });

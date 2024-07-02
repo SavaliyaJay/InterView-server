@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
 const sequelize = require('../Config/db');
+const SubCategory = require('./subCategory.model');
 
 const Question = sequelize.define('Question', {
     q_id: {
@@ -16,16 +17,21 @@ const Question = sequelize.define('Question', {
     },
     subCategoryId: {
         type: Sequelize.INTEGER,
-        field: 'sub_category_id',
+        field: 'subCategoryId',
         allowNull: false,
         validate: {
             notNull: { args: true, msg: "You must enter a name" }
-        },
+        }, references: {
+            model: SubCategory,
+            key: 'id'
+        }
     },
 
 }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at'
 });
+
+Question.belongsTo(SubCategory, { foreignKey: 'subCategoryId', as: 'subCategory' });
 
 module.exports = Question;

@@ -11,13 +11,13 @@ const subCategoryRoute = require('./Routes/subCategory.route');
 const questionRoute = require('./Routes/question.route');
 const answerRoute = require('./Routes/answer.route');
 const suggestionRoute = require('./Routes/suggestion.route');
-var cookieParser = require('cookie-parser');
+// var cookieParser = require('cookie-parser');
 
 app.use(cors({
-    origin: process.env.NODE_ENV == 'production' ? 'https://inter-view-ai.vercel.app' : 'http://localhost:4000',
+    origin: "http://localhost:4000",
     credentials: true
 }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(errorHandler);
@@ -28,6 +28,10 @@ app.use('/v1/subcategory/', subCategoryRoute);
 app.use('/v1/question/', questionRoute);
 app.use('/v1/answer/', answerRoute);
 app.use('/v1/suggestion/', suggestionRoute);
+app.get('/logout', (req, res) => {
+    res.cookie('role', '', { expires: new Date(0) });
+    res.send('Logged out');
+  });
 
 app.get('/', (req, res) => {
     res.send('Hello World');

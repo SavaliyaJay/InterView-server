@@ -59,7 +59,7 @@ const updateCategory = expressAsyncHandler(async (req, res, next) => {
     const categoryAvailable = await categorySchema.findOne({ where: { id: req.params.id } });
 
     if (!categoryAvailable) {
-        return res.status(400).json({ success: true, message: "Category not found" })
+        return res.status(400).json({ success: false, message: "Category not found" })
     }
 
     const category = await categorySchema.update({ name }, { where: { id: req.params.id } });

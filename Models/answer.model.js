@@ -10,7 +10,7 @@ const Answer = sequelize.define('Answer', {
         allowNull: false
     },
     answer: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         field: 'answer',
         allowNull: false
     },
@@ -26,7 +26,7 @@ const Answer = sequelize.define('Answer', {
     }
 }, {
     createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    updatedAt: 'updated_at',
 });
 
 module.exports = Answer;
