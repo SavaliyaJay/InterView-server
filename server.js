@@ -14,9 +14,13 @@ const suggestionRoute = require('./Routes/suggestion.route');
 // var cookieParser = require('cookie-parser');
 
 app.use(cors({
-    origin: "https://inter-view-ai.vercel.app/",
+    origin: [
+        "https://inter-view-ai.vercel.app",
+        "http://localhost:3000" // If you're also testing locally
+    ],
     credentials: true
 }));
+
 // app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
